@@ -3,7 +3,9 @@ int main() {
     char s[256];
     time_t timet;
     struct tm *pTm;
-    mkfifo(AEREO_TORRE_PATH,  S_IRWXU);
+    mkfifo(AEREO_TORRE_PATH, O_CREAT|S_IRWXU);
+    mkfifo(TORRE_AEREO_PATH, O_CREAT|S_IRWXU);
+    //sem_t *sem = sem_open("/np1", O_CREAT, S_IRWXU|S_IRGRP|S_IWGRP, 1);
     pid_t pid;
     pid = fork();
     if (pid < 0 ){
@@ -32,5 +34,6 @@ int main() {
         printf("terminazione torre\n ");
     }
     unlink(AEREO_TORRE_PATH);
+    unlink(TORRE_AEREO_PATH);
     return 2;
 }
