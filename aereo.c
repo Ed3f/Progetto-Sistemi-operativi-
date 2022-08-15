@@ -1,7 +1,8 @@
 #include "defined.h"
 int attesa (int max, int min);
 void scrittura_su_pipe(int n);
-void lettura_pipe (); 
+//void lettura_pipe (); 
+//ò-..void scrittura_su_pipe2(int n);
 /*
 Funzione aereo la quale attende un periodo tra gli 8-3 sec per la preparazioe 
 comunica alla torre la volontà di prendere il volo ed infine attende dai 5-15 sec 
@@ -21,9 +22,9 @@ void  aereo(int nome_aereo){
     sprintf(s,"%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec);
     printf("[ %s ] aereo pronto al decollo %d\n", s, nome_aereo);*/
     scrittura_su_pipe(nome_aereo);
-    lettura_pipe(); 
-    /*secondi_attesa  = attesa(15,5); 
-    printf("aereo %d decollato", nome_aereo);*/
+  /*  lettura_pipe(); 
+    int secondi_attesa2  = attesa(15,5); */
+    //scrittura_su_pipe2( nome_aereo);
 }
 // funzione che randomicamente mi determina il tempo di attesa
 int attesa (int max, int min){
@@ -58,20 +59,23 @@ void scrittura_su_pipe(int n ){
     close(fd);
     //sem_post(sem);
 }
-void lettura_pipe(){
+/*void lettura_pipe(){
     printf("6\n");
     struct tdati stdati;
-    int ft = 1; 
+    int ft,dati_letti = 1; 
     ft= open(TORRE_AEREO_PATH,O_RDONLY);
-    stdati.s[0] = '\0';
+    stdati.s2[0] = '\0';
+    dati_letti = read(ft,&stdati,sizeof(stdati));
+    if (dati_letti > 0){
     if(strcmp(stdati.s2, "decollo autorizzato pista 1") == 0){
         printf("7\n");
-        printf("aereo %d %s\n",stdati.nome_aereo, stdati.s); 
+        printf("aereo %d %s\n",stdati.nome_aereo, stdati.s2); 
         close(ft);
     }
     if(strcmp(stdati.s2, "decollo autorizzato pista numero 2") == 0 ){
         printf("8\n");
-        printf("aereo %d %s\n",stdati.nome_aereo, stdati.s); 
+        printf("aereo %d %s\n",stdati.nome_aereo, stdati.s2); 
             close(ft);
             }
-}
+    }
+}*/

@@ -23,7 +23,7 @@ void torredicontrollo(){
         if (strcmp(stdati.s, "aereo pronto al decollo") == 0 ){
                     printf("aereo %d %s\n", stdati.nome_aereo, stdati.s);
                     //sem_t *sem = sem_open("/np1", O_CREAT, S_IRWXU|S_IRGRP|S_IWGRP, 1);
-                    while (i < 10){
+                    /*while (i < 10){
                         printf ("1\n");
                         printf("id %d\n", stdati.nome_aereo);
                         //sem_wait(sem);
@@ -40,7 +40,7 @@ void torredicontrollo(){
                                         perror("Torre: Errore in scrittura\n");
                                          }
                                  else {
-                                        printf("%s\n",stdati.s2);
+                                        //printf("%s\n",stdati.s2);
                                         printf("messaggio inviato correttamente\n"); 
                                     }
                                     close(ft);
@@ -71,9 +71,14 @@ void torredicontrollo(){
                                     printf("5\n");
                                 break; 
                         }
-                        i++; 
+                        else {
+                            printf("richiesta presa in carico attendere i decolli\n");
+                            i++;
+                            break;
+                        }
+
                     }
-                    //kill(stdati.cod,SIGRTMIN + 1);
+                    //kill(stdati.cod,SIGRTMIN + 1);*/
                 }
                 else{
                     printf("%s\n",stdati.s);
