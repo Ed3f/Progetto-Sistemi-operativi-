@@ -5,6 +5,7 @@ int main() {
     struct tm *pTm;
     mkfifo(AEREO_TORRE_PATH, O_CREAT|S_IRWXU);
     mkfifo(TORRE_AEREO_PATH, O_CREAT|S_IRWXU);
+    mkfifo(DECOLLO_AEREO_PATH, O_CREAT|S_IRWXU);
     //sem_t *sem = sem_open("/np1", O_CREAT, S_IRWXU|S_IRGRP|S_IWGRP, 1);
     pid_t pid;
     pid = fork();
@@ -35,5 +36,6 @@ int main() {
     }
     unlink(AEREO_TORRE_PATH);
     unlink(TORRE_AEREO_PATH);
+    unlink(DECOLLO_AEREO_PATH);
     return 2;
 }
