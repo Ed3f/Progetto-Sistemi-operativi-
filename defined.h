@@ -14,7 +14,7 @@
 #define DECOLLO_AEREO_PATH "/tmp/DECOLLO_AEREO_PATH"
 struct tdati{
     int cod; 
-    int p;
+    int p ;
     int nome_aereo; 
     char s[64];
     char s2[64]; 

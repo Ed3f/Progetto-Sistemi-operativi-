@@ -13,6 +13,7 @@ void  aereo(int nome_aereo){
     time_t timet;
     time (&timet);
     struct tm *pTm;
+    struct tdati stdati; 
     int secondi_attesa;
     secondi_attesa = attesa (8, 3);
     printf("attesa %d\n ",secondi_attesa);
@@ -23,14 +24,12 @@ void  aereo(int nome_aereo){
     printf("[ %s ] aereo pronto al decollo %d\n", s, nome_aereo);*/
     scrittura_su_pipe(nome_aereo);
     lettura_pipe(); 
-    printf("9\n");
     int secondi_attesa2  = attesa(15,5);
-    printf("10\n");
+    printf("aereo %d ",nome_aereo);
     printf("seconda pausa = %d\n", secondi_attesa2);
     sleep(secondi_attesa2);
-    printf("11\n"); 
-    scrittura_su_pipe2( nome_aereo);
-    printf("20\n");
+    printf("aereo %d\n",stdati.nome_aereo);
+    scrittura_su_pipe2(nome_aereo);
 }
 // funzione che randomicamente mi determina il tempo di attesa
 int attesa (int max, int min){
@@ -39,7 +38,7 @@ int attesa (int max, int min){
     struct tm *pTm = localtime(&timet);
     srand(pTm->tm_sec);
     int valore = (rand () % max);
-    return ((valore < 3 ? min+1 : valore));
+    return ((valore < min ? min+1 : valore));
 }
 // comunicazione aereo - torre tramite pipe 
 void scrittura_su_pipe(int n ){
@@ -54,6 +53,7 @@ void scrittura_su_pipe(int n ){
     int fd = open ( AEREO_TORRE_PATH,O_WRONLY);
     //sem_wait (sem);
     stdati.nome_aereo = n;
+    printf("aereo che scrive %d\n", stdati.nome_aereo);
     stdati.cod = getpid();
     strcpy(stdati.s,"aereo pronto al decollo");
     if(write(fd, &stdati, sizeof(stdati)) == -1) {
@@ -63,10 +63,9 @@ void scrittura_su_pipe(int n ){
     //sem_post(sem);
 }
 void lettura_pipe(){
-    printf("6\n");
-     char si[256];
-       time_t timet;
-       struct tm *pTm;
+    char si[256];
+    time_t timet;
+    struct tm *pTm;
     struct tdati stdati;
     int ft,dati_letti = 1; 
     ft= open(TORRE_AEREO_PATH,O_RDONLY);
@@ -74,8 +73,6 @@ void lettura_pipe(){
     dati_letti = read(ft,&stdati,sizeof(stdati));
     if (dati_letti > 0){
     if(strcmp(stdati.s2, "decollo autorizzato pista 1") == 0){
-        printf("7\n");
-        stdati.p = 1;
         time (&timet);
         pTm = localtime(&timet);
         sprintf(si,"%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec);
@@ -84,44 +81,27 @@ void lettura_pipe(){
         close(ft);
     }
     if(strcmp(stdati.s2, "decollo autorizzato pista numero 2") == 0 ){
-        printf("8\n");
-        stdati.p = 2;
         time (&timet);
         pTm = localtime(&timet);
         sprintf(si,"%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec);
         printf("%s ", si);
         printf("aereo %d %s\n",stdati.nome_aereo, stdati.s2); 
-            close(ft);
-            }
+        close(ft);
+        }
     }
 }
 void scrittura_su_pipe2(int n ){
-    printf("12\n");
     struct tdati stdati;
     int fs = open ( DECOLLO_AEREO_PATH,O_WRONLY);
     stdati.nome_aereo = n;
+    printf("aereo che scrive %d\n", stdati.nome_aereo);
     //stdati.cod = getpid();
-    if (stdati.p == 1 ){
-        printf("13\n");
-    strcpy(stdati.s3,"aereo decollato da pista 1");
-    printf("14\n");
+    strcpy(stdati.s3,"aereo decollato");
     if(write(fs, &stdati, sizeof(stdati)) == -1) {
         perror("Child: Errore in write");
     }
     else {
-    printf("messaggio inviato correttamente aereo 1\n"); 
-    }
-    }
-    else if (stdati.p == 2 ){
-        printf("15\n");
-        strcpy(stdati.s3,"aereo decollato da pista  2");
-        printf("16\n");
-    if(write(fs, &stdati, sizeof(stdati)) == -1) {
-        perror("Child: Errore in write");
-    }
-    else {
-    printf("messaggio inviato correttamente aereo 2 \n"); 
+    printf("messaggio inviato correttamente aereo %d\n", stdati.nome_aereo); 
     }
     close(fs);
-    }
 }
