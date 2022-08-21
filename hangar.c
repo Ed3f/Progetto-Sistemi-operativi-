@@ -3,6 +3,7 @@
 void  hangar(){
     char s[256];
     time_t timet;
+    sem_t *sem = sem_open("/np1", O_CREAT, S_IRWXU|S_IRGRP|S_IWGRP, 1); 
     struct tm *pTm= localtime(&timet);
     printf("avvio hangar \n ");
     printf("creazione aerei\n");
@@ -18,7 +19,7 @@ void  hangar(){
             pTm = localtime(&timet);
             sprintf(s,"%02d:%02d:%02d", pTm->tm_hour, pTm->tm_min, pTm->tm_sec);
             printf("%s", s);
-            printf ("Aereo %d\n", i);
+             printf("\e[0;31m aereo %d codice %d\e[0m\n",i, getpid());
             aereo(i);
             exit(0);
         }
@@ -44,5 +45,7 @@ void  hangar(){
     else{
         printf("messaggio inviato correttamente\n");
     }
+    sem_post(sem);
+      close(fd);
 }
 
